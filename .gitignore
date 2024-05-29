@@ -1,7 +1,7 @@
-./1_Code/2_RTL_Simulation/*/.Xil
-./1_Code/2_RTL_Simulation/*/*.cache
-./1_Code/2_RTL_Simulation/*/*.jou
-./1_Code/2_RTL_Simulation/*/*.log
-./1_Code/2_RTL_Simulation/*/*.str
+1_Code/2_RTL_Simulation/*/.Xil
+1_Code/2_RTL_Simulation/*/*.cache/*
+1_Code/2_RTL_Simulation/*/*.jou
+1_Code/2_RTL_Simulation/*/*.log
+1_Code/2_RTL_Simulation/*/*.str
 
-./1_Code/2_RTL_Simulation/*/*.sim/**/xsim/*
+1_Code/2_RTL_Simulation/*/*.sim/**/xsim/*
