@@ -1,0 +1,32 @@
+Vivado Simulator v2023.2
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_behav xil_defaultlib.tb xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 16 for port 'IFM_WIDTH' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:190]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 16 for port 'IFM_HEIGHT' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:191]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 4 for port 'Tr' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:192]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 4 for port 'Tc' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:193]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 5 for port 'Ti' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:194]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 4 for port 'To' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:195]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 16 for port 'Ni' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:196]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 16 for port 'No' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:197]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 16 for port 'SCALE_FACTOR' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:198]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 16 for port 'NEXT_LAYER_INPUT_M' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:199]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 1 for port 'is_CONV00' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:203]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 1 for port 'is_1x1' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:204]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 1 for port 'is_relu' [C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v:205]
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.mul_default
+Compiling module xil_defaultlib.adder_tree
+Compiling module xil_defaultlib.mac
+Compiling module xil_defaultlib.mac_array
+Compiling module xil_defaultlib.conv_maxpool_module
+Compiling module xil_defaultlib.tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_behav

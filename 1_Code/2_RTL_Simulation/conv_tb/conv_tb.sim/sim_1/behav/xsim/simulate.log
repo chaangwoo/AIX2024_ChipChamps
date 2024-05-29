@@ -1,0 +1,33 @@
+Time resolution is 1 ps
+Loading input feature maps from file: ../../inout_data_sw/log_feamap/CONV00_input_32b.hex
+Loading weights from file: ../../inout_data_sw/log_param/CONV00_param_weight_32b.hex
+Loading biases from file: ../../inout_data_sw/log_param/CONV00_param_biases_32b.hex
+Preload data done.
+
+Conv module starts to read feature...
+Conv module finishes reading feature
+
+Conv module starts to read weight...
+Conv module finishes reading weight
+
+Conv module starts to read bias...
+Conv module finishes reading bias
+
+Conv module starts to compute...
+Conv module done
+
+
+=== Validation ===
+
+Validation for layer           0
+
+Loading answers from file: ../../inout_data_sw/log_feamap/CONV02_input_32b.hex
+
+Result is different at         510 th line!
+Expected value: 02830016
+Output value: 027e0016
+
+Validation done.
+
+$finish called at time : 3943160 ns : File "C:/Users/leewo/Desktop/AIX2024/_final/AIX2024_ChipChamps/1_Code/2_RTL_Simulation/conv_tb/conv_tb.srcs/sim_1/imports/sim/tb.v" Line 171
+INFO: xsimkernel Simulation Memory Usage: 37720 KB (Peak: 37720 KB), Simulation CPU Usage: 211234 ms
