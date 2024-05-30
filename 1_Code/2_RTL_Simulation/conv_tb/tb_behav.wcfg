@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="1,485,504.534 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,485,712.935 ns"></ZoomEndTime>
+      <Cursor1Time time="1,485,530.334 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="208"></NameColumnWidth>
+      <ValueColumnWidth column_width="286"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="39" />
+   <wvobject fp_name="/tb/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/rstn" type="logic">
+      <obj_property name="ElementShortName">rstn</obj_property>
+      <obj_property name="ObjectShortName">rstn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/out_counter" type="array">
+      <obj_property name="ElementShortName">out_counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">out_counter[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/conv_valid" type="logic">
+      <obj_property name="ElementShortName">conv_valid</obj_property>
+      <obj_property name="ObjectShortName">conv_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/conv_dout" type="array">
+      <obj_property name="ElementShortName">conv_dout[127:0]</obj_property>
+      <obj_property name="ObjectShortName">conv_dout[127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_vld_i" type="logic">
+      <obj_property name="ElementShortName">mac_vld_i</obj_property>
+      <obj_property name="ObjectShortName">mac_vld_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/din_mac_array_0" type="array">
+      <obj_property name="ElementShortName">din_mac_array_0[0:8][127:0]</obj_property>
+      <obj_property name="ObjectShortName">din_mac_array_0[0:8][127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/din_mac_array_1" type="array">
+      <obj_property name="ElementShortName">din_mac_array_1[0:8][127:0]</obj_property>
+      <obj_property name="ObjectShortName">din_mac_array_1[0:8][127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/din_mac_array_2" type="array">
+      <obj_property name="ElementShortName">din_mac_array_2[0:8][127:0]</obj_property>
+      <obj_property name="ObjectShortName">din_mac_array_2[0:8][127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/din_mac_array_3" type="array">
+      <obj_property name="ElementShortName">din_mac_array_3[0:8][127:0]</obj_property>
+      <obj_property name="ObjectShortName">din_mac_array_3[0:8][127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/win" type="array">
+      <obj_property name="ElementShortName">win[0:8][127:0]</obj_property>
+      <obj_property name="ObjectShortName">win[0:8][127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/valid_mac" type="logic">
+      <obj_property name="ElementShortName">valid_mac</obj_property>
+      <obj_property name="ObjectShortName">valid_mac</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_0_out" type="array">
+      <obj_property name="ElementShortName">mac_array_0_out[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_0_out[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_1_out" type="array">
+      <obj_property name="ElementShortName">mac_array_1_out[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_1_out[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_2_out" type="array">
+      <obj_property name="ElementShortName">mac_array_2_out[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_2_out[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_3_out" type="array">
+      <obj_property name="ElementShortName">mac_array_3_out[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_3_out[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_0_out_add_bias" type="array">
+      <obj_property name="ElementShortName">mac_array_0_out_add_bias[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_0_out_add_bias[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_1_out_add_bias" type="array">
+      <obj_property name="ElementShortName">mac_array_1_out_add_bias[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_1_out_add_bias[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_2_out_add_bias" type="array">
+      <obj_property name="ElementShortName">mac_array_2_out_add_bias[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_2_out_add_bias[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_3_out_add_bias" type="array">
+      <obj_property name="ElementShortName">mac_array_3_out_add_bias[0:3][28:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_3_out_add_bias[0:3][28:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_0_out_quant" type="array">
+      <obj_property name="ElementShortName">mac_array_0_out_quant[0:3][7:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_0_out_quant[0:3][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_1_out_quant" type="array">
+      <obj_property name="ElementShortName">mac_array_1_out_quant[0:3][7:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_1_out_quant[0:3][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_2_out_quant" type="array">
+      <obj_property name="ElementShortName">mac_array_2_out_quant[0:3][7:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_2_out_quant[0:3][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_array_3_out_quant" type="array">
+      <obj_property name="ElementShortName">mac_array_3_out_quant[0:3][7:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_array_3_out_quant[0:3][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/result_0_max" type="array">
+      <obj_property name="ElementShortName">result_0_max[7:0]</obj_property>
+      <obj_property name="ObjectShortName">result_0_max[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/result_1_max" type="array">
+      <obj_property name="ElementShortName">result_1_max[7:0]</obj_property>
+      <obj_property name="ObjectShortName">result_1_max[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/result_2_max" type="array">
+      <obj_property name="ElementShortName">result_2_max[7:0]</obj_property>
+      <obj_property name="ObjectShortName">result_2_max[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/result_3_max" type="array">
+      <obj_property name="ElementShortName">result_3_max[7:0]</obj_property>
+      <obj_property name="ObjectShortName">result_3_max[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/data_out" type="array">
+      <obj_property name="ElementShortName">data_out[127:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/counter" type="array">
+      <obj_property name="ElementShortName">counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">counter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_counter" type="array">
+      <obj_property name="ElementShortName">mac_counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mac_counter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/bias_counter" type="array">
+      <obj_property name="ElementShortName">bias_counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bias_counter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/pool_counter" type="array">
+      <obj_property name="ElementShortName">pool_counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pool_counter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/send_counter" type="array">
+      <obj_property name="ElementShortName">send_counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">send_counter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/conv_done" type="logic">
+      <obj_property name="ElementShortName">conv_done</obj_property>
+      <obj_property name="ObjectShortName">conv_done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/mac_done" type="logic">
+      <obj_property name="ElementShortName">mac_done</obj_property>
+      <obj_property name="ObjectShortName">mac_done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/pool_done" type="logic">
+      <obj_property name="ElementShortName">pool_done</obj_property>
+      <obj_property name="ObjectShortName">pool_done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/send_done" type="logic">
+      <obj_property name="ElementShortName">send_done</obj_property>
+      <obj_property name="ObjectShortName">send_done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/m_conv_maxpool_module/state" type="array">
+      <obj_property name="ElementShortName">state[3:0]</obj_property>
+      <obj_property name="ObjectShortName">state[3:0]</obj_property>
+   </wvobject>
+</wave_config>
