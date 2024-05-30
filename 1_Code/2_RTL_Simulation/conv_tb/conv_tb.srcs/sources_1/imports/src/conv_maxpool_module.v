@@ -17,6 +17,7 @@ module conv_maxpool_module(
   input              is_CONV00,
   input              is_1x1,
   input              is_relu,
+  input              is_maxpool,
   input       [ 3:0] COMMAND,
   input       [31:0] RECEIVE_SIZE,
   input              conv_start,
@@ -1117,8 +1118,7 @@ always @ (posedge clk) begin
         case (state)
           STATE_IDLE: begin
             if (!conv_done) begin
-              //OUTPUT_SIZE <= IFM_DATA_SIZE >> 2; // max-pooling reduces the size by 1/4
-              OUTPUT_SIZE <= is_1x1 ? (IFM_HEIGHT * IFM_WIDTH) : (IFM_HEIGHT * IFM_WIDTH) >> 2; // max-pooling reduces the size by 1/4
+              OUTPUT_SIZE <= is_maxpool ? (IFM_HEIGHT * IFM_WIDTH) >> 2: (IFM_HEIGHT * IFM_WIDTH); // max-pooling reduces the size by 1/4
               counter <= 1'b0;
               valid_o <= 1'b0;
               row <= 1'b0;
@@ -1149,7 +1149,7 @@ always @ (posedge clk) begin
               end
 
               if (is_CONV00) begin
-                if (mac_counter == IFM_DATA_SIZE - 1) begin // processing the last data
+                if (mac_counter == (OUTPUT_SIZE >> 2) * (No >> 2) - 1) begin // processing the last data
                   mac_done <= 1'b1;
                   mac_vld_i <= 1'b0;
                 end
@@ -1183,7 +1183,7 @@ always @ (posedge clk) begin
                   bias_counter <= pool_counter;
                   pool_counter <= pool_counter + 1;
 
-                  if (pool_counter == ((OUTPUT_SIZE * No) >> 2) - 1) begin // processing the last data; '>> 2' means dividing by To
+                  if (pool_counter == ((OUTPUT_SIZE * No) >> 4) - 1) begin // processing the last data;
                     pool_done <= 1'b1;
                   end
 

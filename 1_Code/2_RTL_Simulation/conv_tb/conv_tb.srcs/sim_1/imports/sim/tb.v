@@ -6,11 +6,16 @@ module tb;
 
 // Clock
 parameter CLK_PERIOD = 10;   //100MHz
+reg [63:0] cur_tick;
 reg clk;
 reg rstn;
 initial begin
+   cur_tick = 1'b0;	
    clk = 1'b1;
    forever #(CLK_PERIOD/2) clk = ~clk;
+end
+always @ (posedge clk) begin
+	cur_tick = cur_tick + 1;
 end
 
 // Preloaded data
@@ -29,12 +34,19 @@ reg  [IFM_WORD_SIZE-1:0]    answer [0:IFM_DATA_SIZE-1];
 //--------------------------------------------------------------------
 // Test vector
 //--------------------------------------------------------------------
-integer i;
+integer i, j;
 reg [ 3:0] COMMAND;
 reg [31:0] RECEIVE_SIZE;
 
+reg [63:0] timestamp;
+reg [63:0] read_f_cyc;
+reg [63:0] read_w_cyc;
+reg [63:0] read_b_cyc;
+reg [63:0] compute_cyc;
+
 reg		   vld_i;
 reg		   conv_start;
+
 initial begin
 	// Initialization
     rstn = 1'b0;         // Reset, low active
@@ -97,13 +109,17 @@ initial begin
 	COMMAND = 4'b0001;
 	RECEIVE_SIZE = IFM_DATA_SIZE;
 	conv_start = 1'b1;
+	$display ("Conv start at cycle %0d\n", cur_tick);
 
 	repeat(100)
 		@(posedge clk);
 	
 	$display ("Conv module starts to read feature...");
+	timestamp = cur_tick;
 	wait(F_writedone);
-	$display("Conv module finishes reading feature\n");
+	$display("Conv module finishes reading feature");
+	read_f_cyc = cur_tick - timestamp;
+	$display("Reading feature takes %0d cycles\n", read_f_cyc);
 
 	repeat(100)
 		@(posedge clk);
@@ -116,8 +132,11 @@ initial begin
 		@(posedge clk);
 
 	$display ("Conv module starts to read weight...");
+	timestamp = cur_tick;
 	wait(W_writedone);
-	$display("Conv module finishes reading weight\n");
+	$display("Conv module finishes reading weight");
+	read_w_cyc = cur_tick - timestamp;
+	$display("Reading weight takes %0d cycles\n", read_w_cyc);
 	
 	repeat(100)
 		@(posedge clk);
@@ -130,8 +149,11 @@ initial begin
 		@(posedge clk);
 
 	$display ("Conv module starts to read bias...");
+	timestamp = cur_tick;
 	wait(B_writedone);
-	$display("Conv module finishes reading bias\n");
+	$display("Conv module finishes reading bias");
+	read_b_cyc = cur_tick - timestamp;
+	$display("Reading bias takes %0d cycles\n", read_b_cyc);
 
 	repeat(100)
 		@(posedge clk);
@@ -139,25 +161,30 @@ initial begin
 	COMMAND = 4'b1000;
 
 	$display ("Conv module starts to compute...");
+	timestamp = cur_tick;
 	wait(conv_done);
-	$display ("Conv module done\n\n");
+	$display ("Conv module finishes computing");
+	compute_cyc = cur_tick - timestamp;
+	$display ("Computing takes %0d cycles\n", compute_cyc);
+	$display ("Conv module done");
+	$display ("Total cycle: %0d\n\n", read_f_cyc + read_b_cyc + read_w_cyc + compute_cyc);
 
-    // validation
+    // Validation
 	$display ("=== Validation ===\n");
-    $display ("Validation for layer %d\n", LAYER_NUM);
+    $display ("Validation for layer %0d", LAYER_NUM);
 	$display ("Loading answers from file: %s", ANSWER_FILE);
 	$readmemh(ANSWER_FILE, answer);
 
     for (i = 0; i < OFM_DATA_SIZE / 4; i = i + 1) begin       
         if (OFM[i] != answer[i]) begin
-            $display("\nResult is different at %d th line!", i+1);
+            $display("\nResult is different at %0d th line!", i+1);
             $display("Expected value: %h", answer[i]);
             $display("Output value: %h\n", OFM[i]);
             
             compare_flag = 1'b0;
             wrong_cnt = wrong_cnt + 1;
             if (wrong_cnt == THRES) begin
-                $display("Too many errors, only first %d errors are printed.\n", THRES);
+                $display("Too many errors, only first %0d errors are printed.\n", THRES);
                 i = OFM_DATA_SIZE / 4; // break the loop;
             end
         end
@@ -203,6 +230,7 @@ conv_maxpool_module m_conv_maxpool_module (
 	.is_CONV00			(is_CONV00),
 	.is_1x1				(is_1x1),
 	.is_relu			(is_relu),
+	.is_maxpool			(is_maxpool),
 	.COMMAND			(COMMAND),
 	.RECEIVE_SIZE		(RECEIVE_SIZE),
 	.conv_start			(conv_start),
@@ -259,32 +287,25 @@ always @ (posedge clk) begin
 end
 
 //-------------------------------------------
-// CONV result
+// OFM Saving
 //-------------------------------------------
 wire [31:0] OFM_DATA_SIZE;
 assign OFM_DATA_SIZE = is_maxpool ? (IFM_WIDTH / 2 * IFM_HEIGHT / 2 * No) : (IFM_WIDTH * IFM_HEIGHT * No);
 
 reg [31:0] OFM [0:IFM_DATA_SIZE/4-1]; // Output Feature Map; 4 data per address
 reg [31:0] out_counter;
-reg [31:0] pixel_counter;
-reg [7:0] validation [0:No-1];
-reg validation_done;
-integer j;
+
 always @ (posedge clk) begin
 	if (!rstn) begin
 		for (i = 0; i < OFM_DATA_SIZE; i=i+1)
 			OFM[i] = 8'd0;
-		for (i = 0; i < No; i=i+1)
-			validation[i] = 8'd0;
 		out_counter <= 1'b0;
-		pixel_counter <= 1'b0;
-		validation_done <= 1'b0;
 	end else if (!conv_done) begin
 		if (conv_start) begin
 			if (conv_valid) begin
 				for (i = 0; i < 4; i=i+1) begin
                     for (j = 0; j < 4; j=j+1) begin
-                        // should consider non-maxpool version...
+                        // should consider non-maxpool version and 1x1...
                         OFM[4 * out_counter + i][8*j+:8] = conv_dout[8*(4*i+j)+:8];
                     end
 				end
