@@ -22,7 +22,7 @@
 // Set `LAYER_NUM` to the layer number that you want to simulate
 // Choose among the following:
 
-`define LAYER_00
+// `define LAYER_00
 // `define LAYER_02
 // `define LAYER_04
 // `define LAYER_06
@@ -32,7 +32,7 @@
 // `define LAYER_13
 // `define LAYER_14
 // `define LAYER_17
-// `define LAYER_20
+`define LAYER_20
 
 // -------------------------------------------------------------
 
@@ -225,7 +225,7 @@ parameter LAYER_NUM = 10;
 parameter is_CONV00 = 0;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
-parameter is_maxpool = 1;
+parameter is_maxpool = 0; // since maxpool stride of layer 11 is 1, which is not ordinary case
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 1; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 14;
@@ -236,7 +236,7 @@ parameter IFM_WIDTH         = 8;
 parameter IFM_HEIGHT        = 8;
 parameter IFM_DATA_SIZE     = IFM_HEIGHT*IFM_WIDTH*Ni;	
 parameter IFM_WORD_SIZE     = 32;
-`
+
 // Weight
 parameter Fx = 3, Fy = 3;
 parameter Ni = 256, No = 512; 
@@ -251,7 +251,7 @@ parameter BIAS_WORD_SIZE = 32;
 parameter IFM_FILE   		 = "../../inout_data_sw/log_feamap/CONV10_input_32b.hex"; 
 parameter WGT_FILE   		 = "../../inout_data_sw/log_param/CONV10_param_weight_32b.hex";
 parameter BIAS_FILE          = "../../inout_data_sw/log_param/CONV10_param_biases_32b.hex";
-parameter ANSWER_FILE        = "../../inout_data_sw/log_feamap/CONV12_input_32b.hex";
+parameter ANSWER_FILE        = "../../inout_data_sw/log_feamap/CONV10_output_32b.hex";
 `endif
 /* ########################################################################### */
 

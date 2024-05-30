@@ -31,6 +31,8 @@ module conv_maxpool_module(
   output reg         valid_o,
   output reg [127:0] data_out,
   output reg [127:0] data_out_2,
+  output reg [127:0] data_out_3,
+  output reg [127:0] data_out_4,
   output reg         conv_done
 );
 // --------------------------------------------
@@ -49,9 +51,9 @@ localparam    STATE_DONE = 4'b0010;
 // --------------------------------------------
 // Registers or BRAMs
 // --------------------------------------------
-reg [31:0] in_img [0:65536];        // maximum value is 256*256*4=262144 at CONV00, /4 is needed
+reg [31:0] in_img [0:65536-1];          // maximum value is 256*256*4=262144 at CONV00, /4 is needed
 reg [31:0] weight [0:3*3*256*512/4-1];  // maximum value is 3*3*512*256, but it's too large..., /4 is needed
-reg [31:0]   bias [0:255];          // maximum value is 512 at CONV10, /2 is needed
+reg [31:0]   bias [0:256-1];            // maximum value is 512 at CONV10, /2 is needed
 
 // --------------------------------------------
 // Local variables
@@ -295,7 +297,10 @@ assign bias_mask_1x1 = (No >> 3) - 1;
 generate
   for(b = 0; b < 8; b = b + 1) begin : gen_bias_1x1 // To is 8 in 1x1
     // bias_counter should iterate from 0 to (No >> 3)-1
-    assign bias_1x1[b] = bias[(((bias_counter & bias_mask_1x1) << 3) + b) >> 1][get_BIAS_offset(((bias_counter & bias_mask_1x1) << 3) + b) +:16];
+    // assign bias_1x1[b] = bias[(((bias_counter & bias_mask_1x1) << 3) + b) >> 1][get_BIAS_offset(((bias_counter & bias_mask_1x1) << 3) + b) +:16];
+    assign bias_1x1[b] = (No == 195) 
+          ? // do at home using function that counts 0 - 195 
+          : bias[(((bias_counter & bias_mask_1x1) << 3) + b) >> 1][get_BIAS_offset(((bias_counter & bias_mask_1x1) << 3) + b) +:16];
   end
 endgenerate
 
@@ -965,6 +970,8 @@ always @ (posedge clk) begin
     valid_o <= 1'b0;
     data_out <= 1'b0;
     data_out_2 <= 1'b0;
+    data_out_3 <= 1'b0;
+    data_out_4 <= 1'b0;
     if (conv_done) conv_done <= 1'b1;
     else           conv_done <= 1'b0;
     state <= 1'b0;
@@ -1149,12 +1156,12 @@ always @ (posedge clk) begin
               end
 
               if (is_CONV00) begin
-                if (mac_counter == (OUTPUT_SIZE >> 2) * (No >> 2) - 1) begin // processing the last data
+                if (mac_counter == OUTPUT_SIZE * (No >> 2) - 1) begin // processing the last data; (Ni / Ti) * (IFM_WIDTH * IFM_HEIGHT / (2 * 2)) * (No / To)
                   mac_done <= 1'b1;
                   mac_vld_i <= 1'b0;
                 end
               end else if (is_1x1) begin
-                if (mac_counter == (Ni >> 4) * (OUTPUT_SIZE >> 2) * (No >> 3) - 1) begin // needs verification. 4 is Ti = 16, 2 is 2x2 ofmap, 3 is To = 8
+                if (mac_counter == (Ni >> 4) * (OUTPUT_SIZE >> 2) * (No >> 3) - 1) begin // processing the last data; (Ni / Ti) * (IFM_WIDTH * IFM_HEIGHT / (2 * 2)) * (No / To)
                   mac_done <= 1'b1;
                   mac_vld_i <= 1'b0;
                 end
@@ -1183,7 +1190,7 @@ always @ (posedge clk) begin
                   bias_counter <= pool_counter;
                   pool_counter <= pool_counter + 1;
 
-                  if (pool_counter == ((OUTPUT_SIZE * No) >> 4) - 1) begin // processing the last data;
+                  if (pool_counter == ((OUTPUT_SIZE * No) >> 2) - 1) begin // processing the last data;
                     pool_done <= 1'b1;
                   end
 
@@ -1267,7 +1274,7 @@ always @ (posedge clk) begin
                     partial_sum[3][6] <= 1'b0;
                     partial_sum[3][7] <= 1'b0;
 
-                    if (pool_counter == (OUTPUT_SIZE * No) >> 5 - 1) begin // processing the last data, needs verification, 5 is 2x2x8 ofmap (32)
+                    if (pool_counter == (OUTPUT_SIZE >> 2) * (No >> 3) - 1) begin // processing the last data;
                       pool_done <= 1'b1;
                     end
                   end
@@ -1315,13 +1322,13 @@ always @ (posedge clk) begin
                     pool_counter <= pool_counter;
                   end
 
-                  // if (pool_counter == (OUTPUT_SIZE * No) >> 5 - 1) begin // processing the last data, needs verification, 5 is 2x2x8 ofmap (32)
+                  // if (pool_counter == (OUTPUT_SIZE * No) >> 5 - 1) begin // processing the last data;
                   //   pool_done <= 1'b1;
                   // end
 
                 end else begin
                   // only [0] port is used for each MAC array
-                  if (pool_delay == (Ni >> 4) - 1) begin // '>> 4' means dividing by Ti, need generalization!
+                  if (pool_delay == (Ni >> 4) - 1) begin // '>> 4' means dividing by Ti
                     valid_pool <= 1'b1;
                     pool_delay <= 1'b0;
 
@@ -1410,12 +1417,26 @@ always @ (posedge clk) begin
                   end else if (bias_counter[3:0] == 15) begin        // since the output bandwidth is 16*8-bit
                     send_done <= 1'b0;
                     valid_o <= 1'b1;
-                    data_out[{bias_counter[3:0], {3{1'b0}}}+:8] <= result_buffer[7:0];
+                    if (is_maxpool) begin
+                      data_out[{bias_counter[3:0], {3{1'b0}}}+:8] <= result_buffer[7:0];
+                    end else begin
+                      data_out[{bias_counter[3:0], {3{1'b0}}}+:8]   <= mac_array_0_out_quant[0];
+                      data_out_2[{bias_counter[3:0], {3{1'b0}}}+:8] <= mac_array_1_out_quant[0];
+                      data_out_3[{bias_counter[3:0], {3{1'b0}}}+:8] <= mac_array_2_out_quant[0];
+                      data_out_4[{bias_counter[3:0], {3{1'b0}}}+:8] <= mac_array_3_out_quant[0];
+                    end
                     send_counter <= send_counter + 1;
                   end else begin
                     send_done <= 1'b0;
                     valid_o <= 1'b0;
-                    data_out[{bias_counter[3:0], {3{1'b0}}}+:8] <= result_buffer[7:0];
+                    if (is_maxpool) begin
+                      data_out[{bias_counter[3:0], {3{1'b0}}}+:8] <= result_buffer[7:0];
+                    end else begin
+                      data_out[{bias_counter[3:0], {3{1'b0}}}+:8]   <= mac_array_0_out_quant[0];
+                      data_out_2[{bias_counter[3:0], {3{1'b0}}}+:8] <= mac_array_1_out_quant[0];
+                      data_out_3[{bias_counter[3:0], {3{1'b0}}}+:8] <= mac_array_2_out_quant[0];
+                      data_out_4[{bias_counter[3:0], {3{1'b0}}}+:8] <= mac_array_3_out_quant[0];
+                    end
                     send_counter <= send_counter;
                   end
                 end

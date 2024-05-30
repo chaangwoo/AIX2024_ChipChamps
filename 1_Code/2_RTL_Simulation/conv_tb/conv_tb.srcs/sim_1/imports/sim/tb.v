@@ -34,7 +34,7 @@ reg  [IFM_WORD_SIZE-1:0]    answer [0:IFM_DATA_SIZE-1];
 //--------------------------------------------------------------------
 // Test vector
 //--------------------------------------------------------------------
-integer i, j;
+integer i;
 reg [ 3:0] COMMAND;
 reg [31:0] RECEIVE_SIZE;
 
@@ -211,6 +211,8 @@ wire F_writedone, W_writedone, B_writedone;
 wire conv_ready, conv_valid;
 wire [127:0] conv_dout;
 wire [127:0] conv_dout_2;
+wire [127:0] conv_dout_3;
+wire [127:0] conv_dout_4;
 wire conv_done;
 conv_maxpool_module m_conv_maxpool_module (
 	// inputs
@@ -245,6 +247,8 @@ conv_maxpool_module m_conv_maxpool_module (
 	.valid_o			(conv_valid),
 	.data_out			(conv_dout),
 	.data_out_2			(conv_dout_2),
+	.data_out_3			(conv_dout_3),
+	.data_out_4			(conv_dout_4),
 	.conv_done			(conv_done)
 );
 
@@ -292,24 +296,69 @@ end
 wire [31:0] OFM_DATA_SIZE;
 assign OFM_DATA_SIZE = is_maxpool ? (IFM_WIDTH / 2 * IFM_HEIGHT / 2 * No) : (IFM_WIDTH * IFM_HEIGHT * No);
 
-reg [31:0] OFM [0:IFM_DATA_SIZE/4-1]; // Output Feature Map; 4 data per address
-reg [31:0] out_counter;
+reg  [31:0] OFM [0:IFM_DATA_SIZE/4-1]; // Output Feature Map; 4 data per address
+reg  [31:0] out_counter;
+reg  [31:0] jump_counter;
+wire [31:0] mask;
+assign mask = is_1x1 ? ((No >> 3) - 1) : ((No >> 4) - 1);
+
+wire [63:0] dout_1x1_00, dout_1x1_01, dout_1x1_10, dout_1x1_11;
+assign dout_1x1_00 = conv_dout[ 63: 0];
+assign dout_1x1_01 = conv_dout[127:64];
+assign dout_1x1_10 = conv_dout_2[ 63: 0];
+assign dout_1x1_11 = conv_dout_2[127:64];
 
 always @ (posedge clk) begin
 	if (!rstn) begin
 		for (i = 0; i < OFM_DATA_SIZE; i=i+1)
 			OFM[i] = 8'd0;
 		out_counter <= 1'b0;
+		jump_counter <= 1'b0;
 	end else if (!conv_done) begin
 		if (conv_start) begin
 			if (conv_valid) begin
-				for (i = 0; i < 4; i=i+1) begin
-                    for (j = 0; j < 4; j=j+1) begin
-                        // should consider non-maxpool version and 1x1...
-                        OFM[4 * out_counter + i][8*j+:8] = conv_dout[8*(4*i+j)+:8];
-                    end
+				if (!is_1x1 && is_maxpool) begin
+					for (i = 0; i < 4; i=i+1) begin
+						OFM[4 * out_counter + i] = conv_dout[32*i+:32];
+					end
+					out_counter <= out_counter + 1;
+				end else if (!is_1x1) begin
+					for (i = 0; i < 4; i=i+1) begin
+						OFM[4 * out_counter			  					  + i] =   conv_dout[32*i+:32];
+						OFM[4 * out_counter + (No >> 2)					  + i] = conv_dout_2[32*i+:32];
+						OFM[4 * out_counter + IFM_WIDTH * (No >> 2) 	  + i] = conv_dout_3[32*i+:32];
+						OFM[4 * out_counter + (IFM_WIDTH + 1) * (No >> 2) + i] = conv_dout_4[32*i+:32];
+					end
+					if ((out_counter & mask) == mask) begin
+						if (jump_counter == (IFM_WIDTH >> 1) - 1) begin
+							jump_counter <= 1'b0;
+							out_counter <= out_counter + 1 + (No >> 4) + IFM_WIDTH * (No >> 4);
+						end else begin
+							jump_counter <= jump_counter + 1;
+							out_counter <= out_counter + 1 + (No >> 4);
+						end
+					end else begin
+						out_counter <= out_counter + 1;
+					end
+				end else begin
+					for (i = 0; i < 2; i=i+1) begin
+						OFM[2 * out_counter			  				      + i] = dout_1x1_00[32*i+:32];
+						OFM[2 * out_counter + (No >> 2)				      + i] = dout_1x1_01[32*i+:32];
+						OFM[2 * out_counter + IFM_WIDTH * (No >> 2) 	  + i] = dout_1x1_10[32*i+:32];
+						OFM[2 * out_counter + (IFM_WIDTH + 1) * (No >> 2) + i] = dout_1x1_11[32*i+:32];
+					end
+					if ((out_counter & mask) == mask) begin
+						if (jump_counter == (IFM_WIDTH >> 1) - 1) begin
+							jump_counter <= 1'b0;
+							out_counter <= out_counter + 1 + (No >> 3) + IFM_WIDTH * (No >> 3);
+						end else begin
+							jump_counter <= jump_counter + 1;
+							out_counter <= out_counter + 1 + (No >> 3);
+						end
+					end else begin
+						out_counter <= out_counter + 1;
+					end
 				end
-				out_counter <= out_counter + 1;
 			end
 		end else begin
 			vld_i <= 1'b0;
