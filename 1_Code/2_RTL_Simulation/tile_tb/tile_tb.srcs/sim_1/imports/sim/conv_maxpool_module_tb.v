@@ -1,24 +1,10 @@
 `timescale 1ns / 1ps
 module conv_maxpool_module_tb();
+`include "../../../sources_1/imports/src/define.v"
 
 //==========================================
 //VARIABLE
 //==========================================
-wire    [15:0]  IFM_WIDTH;
-wire    [15:0]  IFM_HEIGHT;
-wire    [ 3:0]  Tr;
-wire    [ 3:0]  Tc;
-wire    [ 4:0]  Ti;
-wire    [ 3:0]  To;
-wire    [15:0]  Ni;
-wire    [15:0]  No;
-wire    [15:0]  SCALE_FACTOR;
-wire    [15:0]  NEXT_LAYER_INPUT_M;
-wire    [31:0]  OFM_DATA_SIZE;
-wire            is_CONV00;
-wire            is_1x1;
-wire            is_relu;
-
 reg             clk;
 reg             rstn;
 
@@ -57,41 +43,15 @@ reg ready_b_t1;
 reg ready_f_t0;
 reg ready_f_t1;
 
-//CONV06 ver.
-reg [31:0] weight_register [18431:0];
-reg [31:0] bias_register   [63:0];
-reg [31:0] ifm_register    [18495:0];
-reg [31:0] ofm_register    [0:16*16*128/4-1];
+reg [31:0] weight_register [80000:0];
+reg [31:0] bias_register   [127:0];
+reg [31:0] ifm_register    [80000:0];
+reg [31:0] ofm_register    [0:65536-1];
 
 reg        compare_flag;
-reg [ 3:0] wrong_cnt;
+reg [31:0] wrong_cnt;
 reg [31:0] out_counter;
-reg [31:0] answer          [0:16*16*128/4-1];
-//==========================================
-//HYPERPARAMETER SETTING
-//==========================================
-//CONV06 ver.
-assign  IFM_WIDTH = 32;
-assign  IFM_HEIGHT = 32;
-assign  Tr = 2;
-assign  Tc = 2;
-assign  Ti = 16;
-assign  To = 1;
-assign  Ni = 64;
-assign  No = 128;
-assign  SCALE_FACTOR = 10;
-assign  NEXT_LAYER_INPUT_M = 3;
-assign  OFM_DATA_SIZE = IFM_WIDTH * IFM_HEIGHT / 4 * No; // max-pooling reduces the size by 4
-assign  is_CONV00 = 0;
-assign  is_1x1 = 0;
-assign  is_relu = 1;
-
-assign conv_start = 1;
-
-parameter IFM_FILE      = "../../inout_data_sw/log_feamap/CONV06_input_32b.hex"; 
-parameter WGT_FILE      = "../../inout_data_sw/log_param/CONV06_param_weight_32b.hex";
-parameter BIAS_FILE     = "../../inout_data_sw/log_param/CONV06_param_biases_32b.hex";
-parameter ANSWER_FILE   = "../../inout_data_sw/log_feamap/CONV08_input_32b.hex";
+reg [31:0] answer          [0:65536-1];
 
 //==========================================
 //LOCALPARAMETER
@@ -101,9 +61,6 @@ integer NB_TB_KILLED = 200000;
 localparam channel_num_per_ifm = 32;
 localparam col_num_per_ifm = 2;
 localparam row_num_per_ifm = 2;
-localparam MAX_WEIGHT_COUNTER = 511;
-localparam MAX_BIAS_COUNTER = 63;
-localparam MAX_IFM_COUNTER = 1087;
 localparam padding_size = 1;
 localparam THRES = 10;
 
@@ -156,19 +113,20 @@ begin
 end
 endtask
 
+integer j;
 task validate;
 begin
-    for (i = 0; i < OFM_DATA_SIZE / 4; i = i + 1) begin       
-        if (ofm_register[i] != answer[i]) begin
-            $display("\nResult is different at %0d th line!", i+1);
-            $display("Expected value: %h", answer[i]);
-            $display("Output value: %h\n", ofm_register[i]);
+    for (j = 0; j < OFM_DATA_SIZE / 4; j = j + 1) begin       
+        if (ofm_register[j] != answer[j]) begin
+            $display("\nResult is different at %0d th line!", j+1);
+            $display("Expected value: %h", answer[j]);
+            $display("Output value: %h\n", ofm_register[j]);
             
             compare_flag = 1'b0;
             wrong_cnt = wrong_cnt + 1;
             if (wrong_cnt == THRES) begin
                 $display("Too many errors, only first %0d errors are printed.\n", THRES);
-                i = OFM_DATA_SIZE / 4; // break the loop;
+                j = OFM_DATA_SIZE / 4; // break the loop;
             end
         end
     end
@@ -187,15 +145,18 @@ end
 //MAIN
 //==========================================
 initial begin
+    compare_flag = 1;
+    wrong_cnt = 0;
+
     time_out();
 end
+
+assign conv_start = 1;
 
 initial begin
     $display("=============================");
     $display("[Info] Test Start!");
-    compare_flag = 1;
-    wrong_cnt = 0;
-
+    
     reset_dut();
 
     read_weight(); 
@@ -207,7 +168,7 @@ initial begin
     read_ans();
     
     $display("\n=== Validation <IFM TILING> ===\n");
-    $display ("Validation for layer %0d", 6);
+    $display ("Validation for layer %0d", LAYER_NUM);
 	$display ("Loading answers from file: %s", ANSWER_FILE);
 
     validate();

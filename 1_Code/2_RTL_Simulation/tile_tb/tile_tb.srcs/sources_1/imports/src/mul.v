@@ -5,7 +5,7 @@ input [7:0] w,
 input [7:0] x, 
 output[15:0] y
 );
-// `include "define.v"
+`include "define.v"
 `ifdef FPGA    
 	wire [17:0] dsp_A, dsp_B;
 	wire [47:0] dsp_P;

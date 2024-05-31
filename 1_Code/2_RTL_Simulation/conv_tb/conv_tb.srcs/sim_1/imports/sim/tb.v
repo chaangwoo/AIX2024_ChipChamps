@@ -429,11 +429,4 @@ always @ (posedge clk) begin
 		end
 	end
 end
-
-wire [31:0] debug_addr_00, debug_addr_01, debug_addr_10, debug_addr_11;
-assign debug_addr_00 = 2 * out_counter;
-assign debug_addr_01 = 2 * out_counter + (No >> 2);
-assign debug_addr_10 = 2 * out_counter + IFM_WIDTH * (No >> 2);
-assign debug_addr_11 = 2 * out_counter + (IFM_WIDTH + 1) * (No >> 2);
-
 endmodule
