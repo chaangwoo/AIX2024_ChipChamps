@@ -45,6 +45,7 @@ parameter is_CONV00 = 1;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
 parameter is_maxpool = 1;
+parameter is_last = 0;
 parameter Tr = 2, Tc = 2; // row-wise and col-wise factor
 parameter Ti = 4, To = 4; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 10;
@@ -82,6 +83,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
 parameter is_maxpool = 1;
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 1; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 10;
@@ -118,6 +120,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
 parameter is_maxpool = 1;
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 1; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 10;
@@ -154,6 +157,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
 parameter is_maxpool = 1;
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 1; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 10;
@@ -190,6 +194,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
 parameter is_maxpool = 1;
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 1; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 9;
@@ -226,6 +231,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
 parameter is_maxpool = 0; // since maxpool stride of layer 11 is 1, which is not ordinary case
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 1; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 14;
@@ -262,6 +268,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 1;
 parameter is_relu = 1;
 parameter is_maxpool = 0;
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 8; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 11;
@@ -298,6 +305,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 0;
 parameter is_relu = 1;
 parameter is_maxpool = 0;
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 1; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 13;
@@ -334,6 +342,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 1;
 parameter is_relu = 0;
 parameter is_maxpool = 0;
+parameter is_last = 1;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 8; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 11; // just the weight scale factor?
@@ -347,7 +356,7 @@ parameter IFM_WORD_SIZE     = 32;
 
 // Weight
 parameter Fx = 1, Fy = 1;
-parameter Ni = 512, No = 195; 
+parameter Ni = 512, No = 200; // 195->200 to set as the multiple of 8
 parameter WGT_DATA_SIZE   = Fx*Fy*Ni*No;
 parameter WGT_WORD_SIZE   = 32;
 
@@ -370,6 +379,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 1;
 parameter is_relu = 1;
 parameter is_maxpool = 0;
+parameter is_last = 0;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 8; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 10;
@@ -406,6 +416,7 @@ parameter is_CONV00 = 0;
 parameter is_1x1 = 1;
 parameter is_relu = 0;
 parameter is_maxpool = 0;
+parameter is_last = 1;
 parameter Tr = 2,  Tc = 2; // row-wise and col-wise factor
 parameter Ti = 16, To = 8; // input-channel-wise and output-channel-wise factor
 parameter SCALE_FACTOR = 12;
@@ -419,7 +430,7 @@ parameter IFM_WORD_SIZE     = 32;
 
 // Weight
 parameter Fx = 1, Fy = 1;
-parameter Ni = 384, No = 195; 
+parameter Ni = 384, No = 200; // 195->200 to set as the multiple of 8
 parameter WGT_DATA_SIZE   = Fx*Fy*Ni*No;
 parameter WGT_WORD_SIZE   = 32;
 

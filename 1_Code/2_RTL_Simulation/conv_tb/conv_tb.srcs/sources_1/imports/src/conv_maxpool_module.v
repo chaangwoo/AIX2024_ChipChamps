@@ -18,6 +18,7 @@ module conv_maxpool_module(
   input              is_1x1,
   input              is_relu,
   input              is_maxpool,
+  input              is_last,
   input       [ 3:0] COMMAND,
   input       [31:0] RECEIVE_SIZE,
   input              conv_start,
@@ -179,7 +180,7 @@ endfunction
 function automatic [31:0] get_BIAS_index(
   input [31:0] _bias_counter
 );
-  get_BIAS_index= _bias_counter >> 1;
+  get_BIAS_index = _bias_counter >> 1;
 endfunction
 function automatic [ 4:0] get_BIAS_offset(
   input [31:0] _bias_counter
@@ -297,10 +298,9 @@ assign bias_mask_1x1 = (No >> 3) - 1;
 generate
   for(b = 0; b < 8; b = b + 1) begin : gen_bias_1x1 // To is 8 in 1x1
     // bias_counter should iterate from 0 to (No >> 3)-1
-    // assign bias_1x1[b] = bias[(((bias_counter & bias_mask_1x1) << 3) + b) >> 1][get_BIAS_offset(((bias_counter & bias_mask_1x1) << 3) + b) +:16];
-    assign bias_1x1[b] = (No == 195) 
-          ? // do at home using function that counts 0 - 195 
-          : bias[(((bias_counter & bias_mask_1x1) << 3) + b) >> 1][get_BIAS_offset(((bias_counter & bias_mask_1x1) << 3) + b) +:16];
+    assign bias_1x1[b] = is_last
+            ? bias[(((bias_counter % 25) << 3) + b) >> 1][get_BIAS_offset(((bias_counter % 25) << 3) + b)+:16]
+            : bias[(((bias_counter & bias_mask_1x1) << 3) + b) >> 1][get_BIAS_offset(((bias_counter & bias_mask_1x1) << 3) + b)+:16];
   end
 endgenerate
 
@@ -320,11 +320,11 @@ generate
     assign mac_1x1_quant[0][d] = mac_1x1_add_bias[0][d][28] ? (is_relu ? 1'b0 : mac_1x1_add_bias[0][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8] + 1)
                                                             : mac_1x1_add_bias[0][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8];
     assign mac_1x1_quant[1][d] = mac_1x1_add_bias[1][d][28] ? (is_relu ? 1'b0 : mac_1x1_add_bias[1][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8] + 1)
-                                                            : mac_1x1_add_bias[1][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8];                                                        
+                                                            : mac_1x1_add_bias[1][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8];
     assign mac_1x1_quant[2][d] = mac_1x1_add_bias[2][d][28] ? (is_relu ? 1'b0 : mac_1x1_add_bias[2][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8] + 1)
                                                             : mac_1x1_add_bias[2][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8];
     assign mac_1x1_quant[3][d] = mac_1x1_add_bias[3][d][28] ? (is_relu ? 1'b0 : mac_1x1_add_bias[3][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8] + 1)
-                                                            : mac_1x1_add_bias[3][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8];                                                        
+                                                            : mac_1x1_add_bias[3][d][(SCALE_FACTOR - NEXT_LAYER_INPUT_M)+:8];
   end
 endgenerate
 
