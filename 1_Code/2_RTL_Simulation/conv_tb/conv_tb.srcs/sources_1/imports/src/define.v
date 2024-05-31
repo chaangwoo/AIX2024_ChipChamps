@@ -22,7 +22,7 @@
 // Set `LAYER_NUM` to the layer number that you want to simulate
 // Choose among the following:
 
-// `define LAYER_00
+`define LAYER_00
 // `define LAYER_02
 // `define LAYER_04
 // `define LAYER_06
@@ -32,7 +32,7 @@
 // `define LAYER_13
 // `define LAYER_14
 // `define LAYER_17
-`define LAYER_20
+// `define LAYER_20
 
 // -------------------------------------------------------------
 

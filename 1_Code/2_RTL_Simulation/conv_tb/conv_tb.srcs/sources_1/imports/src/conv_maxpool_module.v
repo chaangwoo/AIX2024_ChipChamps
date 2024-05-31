@@ -159,7 +159,7 @@ function automatic [31:0] get_IFM_index(
   input [15:0] _col,
   input [15:0] _channel
 ); 
-	get_IFM_index = ((((_row << IFM_BITSHIFT) + _col) << Ni_BITSHIFT) + _channel) >> 2;
+	get_IFM_index = ((((_row << IFM_BITSHIFT) + _col) * Ni) + _channel) >> 2;
 endfunction
 function automatic [ 4:0] get_IFM_offset(
   input [15:0] _channel
@@ -1166,7 +1166,7 @@ always @ (posedge clk) begin
                   mac_vld_i <= 1'b0;
                 end
               end else begin
-                if (mac_counter == (Ni >> 4) * OUTPUT_SIZE * No - 1) begin // processing the last data
+                if (mac_counter == (Ni >> 4) * ((IFM_WIDTH * IFM_HEIGHT) >> 2) * No - 1) begin // processing the last data
                   mac_done <= 1'b1;
                   mac_vld_i <= 1'b0;
                 end
@@ -1345,7 +1345,7 @@ always @ (posedge clk) begin
                     bias_counter <= pool_counter;
                     pool_counter <= pool_counter + 1;
                     
-                    if (pool_counter == (OUTPUT_SIZE * No) - 1) begin // processing the last data
+                    if (pool_counter == (((IFM_WIDTH * IFM_HEIGHT) >> 2) * No) - 1) begin // processing the last data
                       pool_done <= 1'b1;
                     end
                   end else begin
@@ -1410,7 +1410,7 @@ always @ (posedge clk) begin
                     data_out_2 <= {result_1x1_3, result_1x1_2};
                   end
                 end else begin
-                  if (send_counter == OUTPUT_SIZE * (No >> 4)) begin // since the output bandwidth is 16*8-bit
+                  if (send_counter == ((IFM_WIDTH * IFM_HEIGHT) >> 2) * (No >> 4)) begin // since the output bandwidth is 16*8-bit
                     send_done <= 1'b1;
                     valid_o <= 1'b0;
                     data_out <= 1'b0;
